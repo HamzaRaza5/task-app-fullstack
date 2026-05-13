@@ -8,7 +8,14 @@ async function bootstrap() {
 
   // JwtAuthGuard tamaam urls par implement hoga except BY_PASS_URLS ke
   app.useGlobalGuards(new JwtAuthGuard());
-  app.enableCors();
+  app.enableCors({
+    origin: [
+      'https://task-app-fullstack-iota.vercel.app',
+      'https://task-app-fullstack-myp6.vercel.app',
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
 
   const options = new DocumentBuilder()
     .setTitle('TaskApp')
