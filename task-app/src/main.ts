@@ -7,15 +7,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // JwtAuthGuard tamaam urls par implement hoga except BY_PASS_URLS ke
-  app.useGlobalGuards(new JwtAuthGuard());
   app.enableCors({
-    origin: [
-      'https://task-app-fullstack-iota.vercel.app',
-      'https://task-app-fullstack-myp6.vercel.app',
-    ],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
+
+  app.useGlobalGuards(new JwtAuthGuard());
 
   const options = new DocumentBuilder()
     .setTitle('TaskApp')
