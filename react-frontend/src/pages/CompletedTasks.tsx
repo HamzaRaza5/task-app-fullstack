@@ -17,13 +17,15 @@ const CompletedTasks = () => {
 
   const getAllCompletedTasks = async () => {
     const userId = getLoginInfo()?.userId;
+
     if (userId != null) {
       const response = await custom_axios.get(
         ApiConstants.TASK.FIND_COMPLETED(userId),
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-        }
+        },
       );
+
       setTasks(response.data);
     } else {
       toast.info("Sorry you are not authenticated");
@@ -31,38 +33,34 @@ const CompletedTasks = () => {
   };
 
   React.useEffect(() => {
-    if (tasks.length == 0) getAllCompletedTasks();
+    getAllCompletedTasks();
   }, []);
 
   return (
     <div>
-      <NavBar></NavBar>
-      <h1 className=" text-center text-5xl p-4">Completed Tasks</h1>
+      <NavBar />
+      <h1 className="text-center text-5xl p-4">Completed Tasks</h1>
+
       <div className="container mb-2 flex mx-auto w-full items-center justify-center">
         <ul className="flex flex-col p-4">
-          {tasks.map((task) => {
-            return (
-              <CompletedTaskList
-                key={task.id}
-                dateTime={task.date}
-                deleteTodo={async () => {
-                  const response = await custom_axios.delete(
-                    ApiConstants.TASK.DELETE(task.id),
-                    {
-                      headers: {
-                        Authorization:
-                          "Bearer " + localStorage.getItem("token"),
-                      },
-                    }
-                  );
-                  getAllCompletedTasks();
-                  toast.success("Task Deleted Sucessfully!!");
-                }}
-                id={task.id}
-                todo={task.title}
-              ></CompletedTaskList>
-            );
-          })}
+          {tasks.map((task) => (
+            <CompletedTaskList
+              key={task.id}
+              dateTime={task.date}
+              deleteTodo={async () => {
+                await custom_axios.delete(ApiConstants.TASK.DELETE(task.id), {
+                  headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token"),
+                  },
+                });
+
+                getAllCompletedTasks();
+                toast.success("Task Deleted Successfully!!");
+              }}
+              id={task.id}
+              todo={task.title}
+            />
+          ))}
         </ul>
       </div>
     </div>
